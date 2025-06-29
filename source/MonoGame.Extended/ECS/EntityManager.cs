@@ -27,7 +27,7 @@ namespace MonoGame.Extended.ECS
         }
 
         private readonly ComponentManager _componentManager;
-        private int _nextId;
+        private int _nextId; // TODO: Remplacer les int en une type definie par un using
 
         public int Capacity => _entityBag.Capacity;
         public IEnumerable<int> Entities => _entityBag.Where(e => e != null).Select(e => e.Id);
