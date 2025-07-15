@@ -377,7 +377,7 @@ namespace MonoGame.Extended
 		/// </summary>
 		/// <value>
 		///     The world rotation quaternion in radians.
-		/// </value>
+		/// </value>    
 		public Quaternion WorldRotation {
 			get {
 				Vector3 scale = Vector3.Zero;

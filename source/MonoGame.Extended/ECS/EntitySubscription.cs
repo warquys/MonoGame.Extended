@@ -3,14 +3,14 @@ using MonoGame.Extended.Collections;
 
 namespace MonoGame.Extended.ECS
 {
-    internal class EntitySubscription : IDisposable
+    public class EntitySubscription : IDisposable
     {
         private readonly Bag<int> _activeEntities;
         private readonly EntityManager _entityManager;
         private readonly Aspect _aspect;
         private bool _rebuildActives;
 
-        internal EntitySubscription(EntityManager entityManager, Aspect aspect)
+        public EntitySubscription(EntityManager entityManager, Aspect aspect)
         {
             _entityManager = entityManager;
             _aspect = aspect;

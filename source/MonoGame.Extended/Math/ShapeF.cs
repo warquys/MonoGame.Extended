@@ -1,6 +1,8 @@
 ﻿using System;
 using Microsoft.Xna.Framework;
 
+// TODO: Take a look to https://github.com/LokiMidgard/MonoGame.Extended/tree/failed-ShapeF-refactoring
+
 namespace MonoGame.Extended
 {
     /// <summary>
@@ -50,7 +52,7 @@ namespace MonoGame.Extended
                     OrientedRectangle orientedRectangleA when b is OrientedRectangle orientedRectangleB
                         => OrientedRectangle.Intersects(orientedRectangleA, orientedRectangleB).Intersects,
 
-                    _ => throw new ArgumentOutOfRangeException(nameof(a))
+                    _ => throw new NotSupportedException($"{a.GetType().FullName} and do not support Penetration Vector {b.GetType().Name}")
                 };
         }
 

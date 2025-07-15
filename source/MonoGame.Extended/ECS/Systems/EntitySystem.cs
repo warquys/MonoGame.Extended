@@ -15,6 +15,7 @@ namespace MonoGame.Extended.ECS.Systems
             {
                 _world.EntityManager.EntityAdded -= OnEntityAdded;
                 _world.EntityManager.EntityRemoved -= OnEntityRemoved;
+                _world.EntityManager.EntityChanged -= OnEntityChanged;
             }
         }
 

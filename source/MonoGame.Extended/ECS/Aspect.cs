@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.Runtime.Intrinsics;
 
 namespace MonoGame.Extended.ECS
 {
@@ -12,7 +15,9 @@ namespace MonoGame.Extended.ECS
             OneSet = new BitVector32();
         }
 
-        public BitVector32 AllSet;
+        public BitVector32 AllSet; // TODO: Using BitVector can cause issue if more than 32 components are used
+                                  /// Bloom filter
+
         public BitVector32 ExclusionSet;
         public BitVector32 OneSet;
 

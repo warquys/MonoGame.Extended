@@ -195,7 +195,7 @@ namespace MonoGame.Extended.Collisions
                     OrientedRectangle orientedRectangleA when b is RectangleF rectangleB => PenetrationVector(orientedRectangleA, rectangleB),
                     OrientedRectangle orientedRectangleA when b is OrientedRectangle orientedRectangleB => PenetrationVector(orientedRectangleA, orientedRectangleB),
 
-                    _ => throw new ArgumentOutOfRangeException(nameof(a))
+                    _ => throw new NotSupportedException($"{a.GetType().FullName} and do not support Penetration Vector {b.GetType().Name}")
                 };
         }
 

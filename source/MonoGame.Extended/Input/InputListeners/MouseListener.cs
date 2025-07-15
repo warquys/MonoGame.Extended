@@ -150,17 +150,17 @@ namespace MonoGame.Extended.Input.InputListeners
             _gameTime = gameTime;
             _currentState = Mouse.GetState();
 
-            CheckButtonPressed(s => s.LeftButton, MouseButton.Left);
-            CheckButtonPressed(s => s.MiddleButton, MouseButton.Middle);
-            CheckButtonPressed(s => s.RightButton, MouseButton.Right);
-            CheckButtonPressed(s => s.XButton1, MouseButton.XButton1);
-            CheckButtonPressed(s => s.XButton2, MouseButton.XButton2);
+            CheckButtonPressed(static s => s.LeftButton, MouseButton.Left);
+            CheckButtonPressed(static s => s.MiddleButton, MouseButton.Middle);
+            CheckButtonPressed(static s => s.RightButton, MouseButton.Right);
+            CheckButtonPressed(static s => s.XButton1, MouseButton.XButton1);
+            CheckButtonPressed(static s => s.XButton2, MouseButton.XButton2);
 
-            CheckButtonReleased(s => s.LeftButton, MouseButton.Left);
-            CheckButtonReleased(s => s.MiddleButton, MouseButton.Middle);
-            CheckButtonReleased(s => s.RightButton, MouseButton.Right);
-            CheckButtonReleased(s => s.XButton1, MouseButton.XButton1);
-            CheckButtonReleased(s => s.XButton2, MouseButton.XButton2);
+            CheckButtonReleased(static s => s.LeftButton, MouseButton.Left);
+            CheckButtonReleased(static s => s.MiddleButton, MouseButton.Middle);
+            CheckButtonReleased(static s => s.RightButton, MouseButton.Right);
+            CheckButtonReleased(static s => s.XButton1, MouseButton.XButton1);
+            CheckButtonReleased(static s => s.XButton2, MouseButton.XButton2);
 
             // Check for any sort of mouse movement.
             if (HasMouseMoved)
@@ -168,11 +168,11 @@ namespace MonoGame.Extended.Input.InputListeners
                 MouseMoved?.Invoke(this,
                     new MouseEventArgs(ViewportAdapter, gameTime.TotalGameTime, _previousState, _currentState));
 
-                CheckMouseDragged(s => s.LeftButton, MouseButton.Left);
-                CheckMouseDragged(s => s.MiddleButton, MouseButton.Middle);
-                CheckMouseDragged(s => s.RightButton, MouseButton.Right);
-                CheckMouseDragged(s => s.XButton1, MouseButton.XButton1);
-                CheckMouseDragged(s => s.XButton2, MouseButton.XButton2);
+                CheckMouseDragged(static s => s.LeftButton, MouseButton.Left);
+                CheckMouseDragged(static s => s.MiddleButton, MouseButton.Middle);
+                CheckMouseDragged(static s => s.RightButton, MouseButton.Right);
+                CheckMouseDragged(static s => s.XButton1, MouseButton.XButton1);
+                CheckMouseDragged(static s => s.XButton2, MouseButton.XButton2);
             }
 
             // Handle mouse wheel events.

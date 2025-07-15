@@ -194,20 +194,20 @@ namespace MonoGame.Extended
             var corners = rectangle.Points;
             var otherCorners = other.Points;
 
-            var allAxis = new[]
-            {
+            Span<Vector2> allAxis =
+            [
                 corners[1] - corners[0],
                 corners[3] - corners[0],
                 otherCorners[1] - otherCorners[0],
                 otherCorners[3] - otherCorners[0],
-            };
-            var normalizedAxis = new[]
-            {
+            ];
+            Span<Vector2> normalizedAxis =
+            [
                 allAxis[0],
                 allAxis[1],
                 allAxis[2],
                 allAxis[3]
-            };
+            ];
             var overlap = 0f;
             var minimumTranslationVector = Vector2.Zero;
 
