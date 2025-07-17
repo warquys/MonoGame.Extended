@@ -30,12 +30,12 @@ public class ExtendedContentManager : ContentManager
             if (_disposableAssets is null)
             {
                 //  MonoGame please make this protected so subclass have access plz
-                FieldInfo field = typeof(ContentManager).GetField(nameof(_disposableAssets), BindingFlags.NonPublic | BindingFlags.Instance);
-                if (field is null)
+                FieldInfo @field = typeof(ContentManager).GetField(nameof(_disposableAssets), BindingFlags.NonPublic | BindingFlags.Instance);
+                if (@field is null)
                 {
                     throw new InvalidOperationException("Unable to get source disposable assets field");
                 }
-                _disposableAssets = field.GetValue(this) as List<IDisposable>;
+                _disposableAssets = @field.GetValue(this) as List<IDisposable>;
             }
 
             return _disposableAssets;

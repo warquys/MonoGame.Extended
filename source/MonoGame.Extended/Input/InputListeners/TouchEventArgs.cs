@@ -13,7 +13,7 @@ namespace MonoGame.Extended.Input.InputListeners
             RawTouchLocation = location;
             Time = time;
             Position = viewportAdapter?.PointToScreen((int)location.Position.X, (int)location.Position.Y)
-                ?? location.Position.ToPoint();
+                ?? (Point)location.Position;
         }
 
         public ViewportAdapter ViewportAdapter { get; }

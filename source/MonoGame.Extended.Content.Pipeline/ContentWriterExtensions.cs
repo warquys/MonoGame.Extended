@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System.Numerics;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content.Pipeline.Serialization.Compiler;
 
 namespace MonoGame.Extended.Content.Pipeline
@@ -13,7 +14,7 @@ namespace MonoGame.Extended.Content.Pipeline
             contentWriter.Write(value.A);
         }
 
-        public static void Write(this ContentWriter contentWriter, Matrix value)
+        public static void Write(this ContentWriter contentWriter, Matrix4x4 value)
         {
             contentWriter.Write(value.M11);
             contentWriter.Write(value.M12);

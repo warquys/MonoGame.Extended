@@ -32,5 +32,12 @@
             <_Parameter1>MonoGame.Extended.Content.Pipeline</_Parameter1>
         </AssemblyAttribute>
     </ItemGroup>
+    <ItemGroup>
+      <PackageReference Include="MonoGame.Library.OpenAL" Version="1.23.1.10" />
+      <PackageReference Include="MonoGame.Library.SDL" Version="2.32.2.1" />
+    </ItemGroup>
+    <ItemGroup>
+      <ProjectReference Include="..\..\..\MonoGame\MonoGame.Framework\MonoGame.Framework.DesktopGL.csproj" />
+    </ItemGroup>
 
 </Project>
