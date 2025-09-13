@@ -229,6 +229,7 @@ namespace MonoGame.Extended
         /// <value>
         ///     The world position.
         /// </value>
+        [Obsolete("Use Decompose method.  This property will be removed in 4.0")]
         public Vector2 WorldPosition => WorldMatrix.Translation;
 
         /// <summary>
@@ -237,6 +238,7 @@ namespace MonoGame.Extended
         /// <value>
         ///     The world scale.
         /// </value>
+        [Obsolete("Use Decompose method.  This property will be removed in 4.0")]
         public Vector2 WorldScale => WorldMatrix.Scale;
 
         /// <summary>
@@ -245,6 +247,7 @@ namespace MonoGame.Extended
         /// <value>
         ///     The world rotation angle in radians.
         /// </value>
+        [Obsolete("Use Decompose method.  This property will be removed in 4.0")]
         public float WorldRotation => WorldMatrix.Rotation;
 
         /// <summary>

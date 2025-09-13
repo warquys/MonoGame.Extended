@@ -8,7 +8,6 @@ using Microsoft.Xna.Framework;
 using MonoGame.Extended.Graphics;
 using MonoGame.Extended.Particles.Data;
 using MonoGame.Extended.Particles.Modifiers;
-using MonoGame.Extended.Particles.Primitives;
 using MonoGame.Extended.Particles.Profiles;
 
 namespace MonoGame.Extended.Particles;
@@ -317,15 +316,15 @@ public sealed unsafe class ParticleEmitter : IDisposable
     /// This method creates particles at random positions along the specified line segment.
     /// The number of particles released is determined by the <see cref="ParticleReleaseParameters.Quantity"/> property.
     /// </remarks>
-    public void Trigger(LineSegment line, float layerDepth = 0)
+    public void Trigger(Segment2 line, float layerDepth = 0)
     {
         int numToRelease = Parameters.Quantity.Value;
-        Vector2 lineVector = line.ToVector2();
+        Vector2 lineVector = line.Direction;
 
         for (int i = 0; i < numToRelease; i++)
         {
             Vector2 offset = lineVector * FastRandom.Shared.NextSingle();
-            Release(line.Origin + offset, 1, layerDepth);
+            Release(line.Start + offset, 1, layerDepth);
         }
     }
 

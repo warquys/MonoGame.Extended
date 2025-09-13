@@ -7,7 +7,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Microsoft.Xna.Framework;
-using MonoGame.Extended.Particles.Primitives;
 
 namespace MonoGame.Extended.Particles;
 
@@ -188,7 +187,7 @@ public class ParticleEffect : IDisposable
     /// <exception cref="ObjectDisposedException">
     /// Thrown if this method is called after the effect has been disposed.
     /// </exception>
-    public void Trigger(LineSegment line, float layerDepth)
+    public void Trigger(Segment2 line, float layerDepth)
     {
         ObjectDisposedException.ThrowIf(IsDisposed, typeof(ParticleBuffer));
 

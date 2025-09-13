@@ -1,5 +1,4 @@
 ﻿using System;
-using Microsoft.Xna.Framework;
 
 namespace MonoGame.Extended
 {
@@ -12,6 +11,12 @@ namespace MonoGame.Extended
     /// <seealso cref="IEquatableByRef{Segment2}" />
     public struct Segment2 : IEquatable<Segment2>, IEquatableByRef<Segment2>
     {
+        // NICE TO HAVE: Compressive system with Ray, VertexLineSegment and methods bettewin for intersection and interaction
+        /// <summary>
+        /// Represent a segement starting and ending at <see cref="Vector2.Zero"/>.
+        /// </summary>
+        public static readonly Segment2 Zero = new Segment2();
+
         /// <summary>
         ///     The starting <see cref="Vector2" /> of this <see cref="Segment2" />.
         /// </summary>
@@ -21,6 +26,18 @@ namespace MonoGame.Extended
         ///     The ending <see cref="Vector2" /> of this <see cref="Segment2" />.
         /// </summary>
         public Vector2 End;
+
+        /// <summary>
+        /// Gets the direction vector of the line segment. <b> Not normalized!</b>
+        /// </summary>
+        /// <value>A vector from the <see cref="Start"/> point to the <see cref="End"/>.</value>
+        public readonly Vector2 Direction
+        {
+            get
+            {
+                return Start - End;
+            }
+        }
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="Segment2" /> structure from the specified starting and ending
@@ -44,6 +61,16 @@ namespace MonoGame.Extended
         public Segment2(float x1, float y1, float x2, float y2)
             : this(new Vector2(x1, y1), new Vector2(x2, y2))
         {
+        }
+
+        /// <summary>
+        /// Returns a new line segment that is a translated version of this line segment.
+        /// </summary>
+        /// <param name="vector">The vector by which to translate the line segment.</param>
+        /// <returns>A new <see cref="Segment2"/> that is offset by the specified vector.</returns>
+        public Segment2 Translate(Vector2 vector)
+        {
+            return new Segment2(Start + vector, End + vector);
         }
 
         // Real-Time Collision Detection, Christer Ericson, 2005. Chapter 5.1.2; Basic Primitive Tests - Closest Point on Line Segment to Point. pg 127-130
@@ -210,6 +237,15 @@ namespace MonoGame.Extended
             }
 
             return true;
+        }
+
+        /// <summary>
+        /// Deconstruct the segment to 2 vector2s, start and end.
+        /// </summary>
+        public void Deconstruct(out Vector2 start, out Vector2 end)
+        {
+            start = Start;
+            end = End;
         }
 
         /// <summary>

@@ -166,7 +166,7 @@ namespace MonoGame.Extended.Triangulation
             //construct a list of all line segments where at least one vertex
             //is to the right of the rightmost hole vertex with one vertex
             //above the hole vertex and one below
-            List<LineSegment> segmentsToTest = new List<LineSegment>();
+            List<VertexLineSegment> segmentsToTest = new List<VertexLineSegment>();
             for (int i = 0; i < polygonVertices.Count; i++)
             {
                 Vertex a = polygonVertices[i].Value;
@@ -175,14 +175,14 @@ namespace MonoGame.Extended.Triangulation
                 if ((a.Position.X > rightMostHoleVertex.Position.X || b.Position.X > rightMostHoleVertex.Position.X) &&
                     ((a.Position.Y >= rightMostHoleVertex.Position.Y && b.Position.Y <= rightMostHoleVertex.Position.Y) ||
                     (a.Position.Y <= rightMostHoleVertex.Position.Y && b.Position.Y >= rightMostHoleVertex.Position.Y)))
-                    segmentsToTest.Add(new LineSegment(a, b));
+                    segmentsToTest.Add(new VertexLineSegment(a, b));
             }
 
             //now we try to find the closest intersection point heading to the right from
             //our hole vertex.
             float? closestPoint = null;
-            LineSegment closestSegment = new LineSegment();
-            foreach (LineSegment segment in segmentsToTest)
+            VertexLineSegment closestSegment = new VertexLineSegment();
+            foreach (VertexLineSegment segment in segmentsToTest)
             {
                 float? intersection = segment.IntersectsWithRay(rightMostHoleVertex.Position, Vector2.UnitX);
                 if (intersection != null)
@@ -202,9 +202,9 @@ namespace MonoGame.Extended.Triangulation
 
             //otherwise we can find our mutually visible vertex to split the polygon
             Vector2 I = rightMostHoleVertex.Position + Vector2.UnitX * closestPoint.Value;
-            Vertex P = (closestSegment.A.Position.X > closestSegment.B.Position.X)
-                ? closestSegment.A
-                : closestSegment.B;
+            Vertex P = (closestSegment.Start.Position.X > closestSegment.End.Position.X)
+                ? closestSegment.Start
+                : closestSegment.End;
 
             //construct triangle MIP
             Triangle mip = new Triangle(rightMostHoleVertex, new Vertex(I, 1), P);
