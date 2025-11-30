@@ -30,7 +30,7 @@ namespace MonoGame.Extended.ECS
         private int _nextId; // TODO: Remplacer les int en une type definie par un using
 
         public int Capacity => _entityBag.Capacity;
-        public IEnumerable<int> Entities => _entityBag.Where(e => e != null).Select(e => e.Id);
+        public IEnumerable<Entity> Entities => _entityBag.Where(e => e != null);
         public int ActiveCount { get; private set; }
 
         private readonly Bag<Entity> _entityBag;

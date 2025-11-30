@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System.Collections.Generic;
+using Microsoft.Xna.Framework;
 using MonoGame.Extended.Collections;
 using MonoGame.Extended.ECS.Systems;
 
@@ -36,6 +37,7 @@ namespace MonoGame.Extended.ECS
         internal ComponentManager ComponentManager { get; }
 
         public int EntityCount => EntityManager.ActiveCount;
+        public IEnumerable<Entity> Entities => EntityManager.Entities;
 
         internal void RegisterSystem(ISystem system)
         {

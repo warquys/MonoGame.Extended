@@ -53,7 +53,7 @@ namespace MonoGame.Extended.ECS
             _activeEntities.Clear();
 
             foreach (var entity in _entityManager.Entities)
-                OnEntityAdded(entity);
+                OnEntityAdded(entity.Id);
 
             _rebuildActives = false;
         }
