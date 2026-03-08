@@ -62,7 +62,7 @@ namespace MonoGame.Extended.Collections
             {
                 EnsureCapacity(index + 1);
                 if (index >= Count)
-                    Count = index + 1;
+                    Count = index + 1; // Bug if jumping over indices or entended ?
                 _items[index] = value;
             }
         }
@@ -114,28 +114,21 @@ namespace MonoGame.Extended.Collections
 
         public bool Remove(T element)
         {
-            for (var index = Count - 1; index >= 0; --index)
-            {
-                if (element.Equals(_items[index]))
-                {
-                    --Count;
-                    _items[index] = _items[Count];
-                    _items[Count] = default(T);
-
-                    return true;
-                }
-            }
-
-            return false;
+            var index = Array.IndexOf<T>(_items, element, 0, Count - 1);
+            if (index < 0) return false;
+            --Count;
+            _items[index] = _items[Count];
+            _items[Count] = default(T);
+            return true;
         }
 
         public bool RemoveAll(Bag<T> bag)
         {
             var isResult = false;
-
-            for (var index = bag.Count - 1; index >= 0; --index)
+            
+            foreach (var element in bag)
             {
-                if (Remove(bag[index]))
+                if (Remove(element))
                     isResult = true;
             }
 
