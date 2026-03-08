@@ -110,11 +110,11 @@ public struct MouseStateExtended
         // ReSharper disable once SwitchStatementMissingSomeCases
         switch (button)
         {
-            case MouseButton.Left:     return IsPressed(m => m.LeftButton);
-            case MouseButton.Middle:   return IsPressed(m => m.MiddleButton);
-            case MouseButton.Right:    return IsPressed(m => m.RightButton);
-            case MouseButton.XButton1: return IsPressed(m => m.XButton1);
-            case MouseButton.XButton2: return IsPressed(m => m.XButton2);
+            case MouseButton.Left:     return IsPressed(static m => m.LeftButton);
+            case MouseButton.Middle:   return IsPressed(static m => m.MiddleButton);
+            case MouseButton.Right:    return IsPressed(static m => m.RightButton);
+            case MouseButton.XButton1: return IsPressed(static m => m.XButton1);
+            case MouseButton.XButton2: return IsPressed(static m => m.XButton2);
         }
 
         return false;
@@ -132,11 +132,11 @@ public struct MouseStateExtended
         // ReSharper disable once SwitchStatementMissingSomeCases
         switch (button)
         {
-            case MouseButton.Left:     return IsReleased(m => m.LeftButton);
-            case MouseButton.Middle:   return IsReleased(m => m.MiddleButton);
-            case MouseButton.Right:    return IsReleased(m => m.RightButton);
-            case MouseButton.XButton1: return IsReleased(m => m.XButton1);
-            case MouseButton.XButton2: return IsReleased(m => m.XButton2);
+            case MouseButton.Left:     return IsReleased(static m => m.LeftButton);
+            case MouseButton.Middle:   return IsReleased(static m => m.MiddleButton);
+            case MouseButton.Right:    return IsReleased(static m => m.RightButton);
+            case MouseButton.XButton1: return IsReleased(static m => m.XButton1);
+            case MouseButton.XButton2: return IsReleased(static m => m.XButton2);
         }
 
         return false;
@@ -151,11 +151,11 @@ public struct MouseStateExtended
     /// </returns>
     public readonly bool WasButtonPressed(MouseButton button) => button switch
     {
-        MouseButton.Left => WasJustPressed(m => m.LeftButton),
-        MouseButton.Middle => WasJustPressed(m => m.MiddleButton),
-        MouseButton.Right => WasJustPressed(m => m.RightButton),
-        MouseButton.XButton1 => WasJustPressed(m => m.XButton1),
-        MouseButton.XButton2 => WasJustPressed(m => m.XButton2),
+        MouseButton.Left     => WasJustPressed(static m => m.LeftButton),
+        MouseButton.Middle   => WasJustPressed(static m => m.MiddleButton),
+        MouseButton.Right    => WasJustPressed(static m => m.RightButton),
+        MouseButton.XButton1 => WasJustPressed(static m => m.XButton1),
+        MouseButton.XButton2 => WasJustPressed(static m => m.XButton2),
         _ => false,
     };
 
