@@ -17,7 +17,7 @@ namespace MonoGame.Extended.Tests.Collections
             var bag = new Bag<int>();
             for (int i = 0; i < 100; i++) bag.Add(i);
             // ensure we have plenty of memory and that the heap only increases for the duration of this test
-            Assert.True(GC.TryStartNoGCRegion(Unsafe.SizeOf<Bag<int>.BagEnumerator>() * 1000));
+            Assert.True(GC.TryStartNoGCRegion(Unsafe.SizeOf<Bag<int>.Enumerator>() * 1000));
             var heapSize = GC.GetAllocatedBytesForCurrentThread();
 
             // this should NOT allocate

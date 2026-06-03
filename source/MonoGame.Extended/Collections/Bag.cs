@@ -1,42 +1,7 @@
-﻿// Original code dervied from:
-// https://github.com/thelinuxlich/artemis_CSharp/blob/master/Artemis_XNA_INDEPENDENT/Utils/Bag.cs
-
-// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="Bag.cs" company="GAMADU.COM">
-//     Copyright © 2013 GAMADU.COM. All rights reserved.
-//
-//     Redistribution and use in source and binary forms, with or without modification, are
-//     permitted provided that the following conditions are met:
-//
-//        1. Redistributions of source code must retain the above copyright notice, this list of
-//           conditions and the following disclaimer.
-//
-//        2. Redistributions in binary form must reproduce the above copyright notice, this list
-//           of conditions and the following disclaimer in the documentation and/or other materials
-//           provided with the distribution.
-//
-//     THIS SOFTWARE IS PROVIDED BY GAMADU.COM 'AS IS' AND ANY EXPRESS OR IMPLIED
-//     WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
-//     FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL GAMADU.COM OR
-//     CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
-//     CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-//     SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
-//     ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-//     NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
-//     ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
-//     The views and conclusions contained in the software and documentation are those of the
-//     authors and should not be interpreted as representing official policies, either expressed
-//     or implied, of GAMADU.COM.
-// </copyright>
-// <summary>
-//   Class Bag.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
-
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 
 namespace MonoGame.Extended.Collections
 {
@@ -57,40 +22,35 @@ namespace MonoGame.Extended.Collections
     {
         private T[] _items;
         private int _version;
-
-        /// <summary>
-        /// Gets a value indicating whether the <see cref="Bag{T}"/> is empty.
-        /// </summary>
-        /// <value><see langword="true"/> if the <see cref="Bag{T}"/> contains no elements; otherwise, <see langword="false"/>.</value>
-        public bool IsEmpty => Count == 0;
+        private int _count;
 
         /// <summary>
         /// Gets the number of elements contained in the <see cref="Bag{T}"/>.
         /// </summary>
         /// <value>The number of elements in the <see cref="Bag{T}"/>.</value>
-        public int Count { get; private set; }
+        public int Count => _count;
 
         /// <summary>
         /// Gets or sets the total number of elements the internal data structure can hold without allocating more space.
         /// </summary>
         /// <value>The capacity of the <see cref="Bag{T}"/>.</value>
-        /// <exception cref="OutOfMemoryException">Thrown when the capacity is set to a value less than the current count of elements.</exception>
+        /// <exception cref="ArgumentOutOfRangeException">Thrown when the capacity is set to a value less than the current count of elements.</exception>
         public int Capacity
         {
             get => _items.Length;
             set
             {
-                if (value < Count)
-                    throw new OutOfMemoryException("capacity was less than the current size.");
+                if (value < _count)
+                    throw new ArgumentOutOfRangeException("Capacity was less than the current size.");
 
                 if (value != _items.Length)
                 {
                     if (value > 0)
                     {
                         T[] newItems = new T[value];
-                        if (Count > 0)
+                        if (_count > 0)
                         {
-                            Array.Copy(_items, newItems, Count);
+                            Array.Copy(_items, newItems, _count);
                         }
                         _items = newItems;
                     }
@@ -134,7 +94,7 @@ namespace MonoGame.Extended.Collections
             get => index >= _items.Length ? default(T) : _items[index];
             set
             {
-                if (index >= Count)
+                if (index >= _count)
                     throw new ArgumentOutOfRangeException("Index was out of range. Must be non-negative and less than the size of the collection.");
                 EnsureCapacity(index + 1);
                 _items[index] = value;
@@ -149,9 +109,9 @@ namespace MonoGame.Extended.Collections
         public void Add(T element)
         {
             _version++;
-            EnsureCapacity(Count + 1);
-            _items[Count] = element;
-            ++Count;
+            EnsureCapacity(_count + 1);
+            _items[_count] = element;
+            _count++;
         }
 
         /// <summary>
@@ -161,7 +121,7 @@ namespace MonoGame.Extended.Collections
         public void AddRange(Bag<T> range)
         {
             _version++;
-            for (int index = 0, j = range.Count; j > index; ++index)
+            for (int index = 0, j = range._count; j > index; ++index)
                 Add(range[index]);
         }
 
@@ -170,15 +130,15 @@ namespace MonoGame.Extended.Collections
         /// </summary>
         public void Clear()
         {
-            if(Count == 0)
+            if(_count == 0)
                 return;
 
-            // non-primitive types are cleared so the garbage collector can release them
-            if (!typeof(T).IsPrimitive)
-                Array.Clear(_items, 0, Count);
+            // need to free for the GC
+            if (!RuntimeHelpers.IsReferenceOrContainsReferences<T>())
+                Array.Clear(_items, 0, _count);
 
             _version++;
-            Count = 0;
+            _count = 0;
         }
 
         /// <summary>
@@ -188,7 +148,7 @@ namespace MonoGame.Extended.Collections
         /// <returns>true if the element is found in the <see cref="Bag{T}"/>; otherwise, false.</returns>
         public bool Contains(T element)
         {
-            return Count != 0 && IndexOf(element) > 0;
+            return _count != 0 && IndexOf(element) > 0;
         }
 
         /// <summary>
@@ -199,9 +159,9 @@ namespace MonoGame.Extended.Collections
         public T RemoveAt(int index)
         {
             var result = _items[index];
-            --Count;
-            _items[index] = _items[Count];
-            _items[Count] = default(T);
+            _count--;
+            _items[index] = _items[_count];
+            _items[_count] = default(T);
             _version++;
             return result;
         }
@@ -221,9 +181,9 @@ namespace MonoGame.Extended.Collections
             var index = IndexOf(element);
             if (index < 0)
                 return false;
-            --Count;
-            _items[index] = _items[Count];
-            _items[Count] = default(T);
+            _count--;
+            _items[index] = _items[_count];
+            _items[_count] = default(T);
             _version++;
             return true;
         }
@@ -252,9 +212,9 @@ namespace MonoGame.Extended.Collections
         /// </summary>
         public void TrimExcess()
         {
-            int threshold = (int)(((double)_items.Length) * 0.9);
-            if (Count < threshold)
-                Capacity = Count;
+            int threshold = (int)(_items.Length * 0.9);
+            if (_count < threshold)
+                Capacity = _count;
         }
 
         /// <summary>
@@ -278,7 +238,7 @@ namespace MonoGame.Extended.Collections
 
             try
             {
-                Array.Copy(_items, 0, array, arrayIndex, Count);
+                Array.Copy(_items, 0, array, arrayIndex, _count);
             }
             catch (ArrayTypeMismatchException)
             {
@@ -296,7 +256,7 @@ namespace MonoGame.Extended.Collections
         /// <exception cref="ArgumentException">Thrown when the offset and length are out of bounds for the array or count is greater than the number of elements from index to the end of the collection.</exception>
         public void CopyTo(int index, T[] array, int arrayIndex, int count)
         {
-            if (Count - index < count)
+            if (_count - index < count)
                 throw new ArgumentException("Offset and length were out of bounds for the array or count is greater than the number of elements from index to the end of the source collection.");
 
             Array.Copy(_items, index, array, arrayIndex, count);
@@ -309,7 +269,7 @@ namespace MonoGame.Extended.Collections
         /// <param name="arrayIndex">The zero-based index in the target array at which copying begins.</param>
         public void CopyTo(T[] array, int arrayIndex)
         {
-            Array.Copy(_items, 0, array, arrayIndex, Count);
+            Array.Copy(_items, 0, array, arrayIndex, _count);
         }
 
         /// <summary>
@@ -319,16 +279,16 @@ namespace MonoGame.Extended.Collections
         /// <returns>The zero-based index of the first occurrence of the element, or -1 if the element is not found.</returns>
         public int IndexOf(T item)
         {
-            return Array.IndexOf(_items, item, 0, Count - 1);
+            return Array.IndexOf(_items, item, 0, _count - 1);
         }
 
         void IList<T>.Insert(int index, T item)
         {
-            if (index > Count)
+            if (index > _count)
             {
                 throw new ArgumentOutOfRangeException("Index must be within the bounds of the bag, any value under Count (include) and over 0 (include).");
             }
-            else if (index < Count)
+            else if (index < _count)
             {
                 Add(_items[index]);
                 _items[index] = item;
@@ -356,22 +316,22 @@ namespace MonoGame.Extended.Collections
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
         /// <summary>
-        /// Get the <see cref="BagEnumerator"/> for this <see cref="Bag{T}"/>. 
+        /// Get the <see cref="Enumerator"/> for this <see cref="Bag{T}"/>. 
         /// </summary>
         /// <returns></returns>
         /// <remarks>
         /// Use this method preferentially over <see cref="IEnumerable.GetEnumerator"/> while enumerating via foreach
         /// to avoid boxing the enumerator on every iteration, which can be expensive in high-performance environments.
         /// </remarks>
-        public BagEnumerator GetEnumerator()
+        public Enumerator GetEnumerator()
         {
-            return new BagEnumerator(this);
+            return new Enumerator(this);
         }
 
         int IList.Add(object value)
         {
             Add((T)value);
-            return Count - 1;
+            return _count - 1;
         }
 
         bool IList.Contains(object value)
@@ -409,50 +369,52 @@ namespace MonoGame.Extended.Collections
             return value is T || (value == null && default(T) == null);
         }
 
-        internal struct BagEnumerator : IEnumerator<T>
+        /// <summary>
+        /// Enumerates the elements of <see cref="Bag{T}"/>.
+        /// </summary>
+        public struct Enumerator : IEnumerator<T>, IEnumerator
         {
             private readonly Bag<T> _bag;
-            private volatile int _index;
-            private int _version;
+            private readonly int _version;
 
-            /// <summary>
-            /// Creates a new <see cref="BagEnumerator"/> for this <see cref="Bag{T}"/>.
-            /// </summary>
-            /// <param name="bag"></param>
-            public BagEnumerator(Bag<T> bag)
+            private int _index;
+            private T _current;
+
+            internal Enumerator(Bag<T> bag)
             {
-                _version = bag._version;
                 _bag = bag;
-                _index = -1;
+                _version = bag._version;
             }
-
-            readonly T IEnumerator<T>.Current => _bag[_index];
-
-            readonly object IEnumerator.Current => _bag[_index];
-
-            /// <summary>
-            /// Gets the element in the <see cref="Bag{T}"/> at the current position of the enumerator.
-            /// </summary>
-            public readonly T Current => _bag[_index];
 
             /// <inheritdoc/>
             public bool MoveNext()
             {
+                Bag<T> localList = _bag;
+
                 if (_version != _bag._version)
-                    throw new Exception("Collection was modified; enumeration operation may not execute.");
-                return ++_index < _bag.Count;
+                {
+                    throw new InvalidOperationException("Collection was modified; enumeration operation may not execute.");
+                }
+                
+                if ((uint)_index < (uint)localList._count)
+                {
+                    _current = localList._items[_index];
+                    _index++;
+                    return true;
+                }
+
+                _current = default;
+                return false;
             }
 
             /// <inheritdoc/>
-            public readonly void Dispose()
-            {
-            }
+            public T Current => _current;
 
-            /// <inheritdoc/>
-            public readonly void Reset()
-            {
-                throw new NotSupportedException();
-            }
+            object IEnumerator.Current => _current;
+
+            void IDisposable.Dispose() { }
+
+            void IEnumerator.Reset() => throw new NotImplementedException();
         }
     }
 }
