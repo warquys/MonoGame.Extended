@@ -94,7 +94,7 @@ namespace MonoGame.Extended.Collections
             get => index >= _items.Length ? default(T) : _items[index];
             set
             {
-                if (index >= _count)
+                if (index < 0 || index >= _count)
                     throw new ArgumentOutOfRangeException("Index was out of range. Must be non-negative and less than the size of the collection.");
                 EnsureCapacity(index + 1);
                 _items[index] = value;
@@ -158,11 +158,19 @@ namespace MonoGame.Extended.Collections
         /// <returns>The element that was removed from the <see cref="Bag{T}"/>.</returns>
         public T RemoveAt(int index)
         {
+            if (index < 0 || index >= _count)
+                throw new ArgumentOutOfRangeException("Index was out of range. Must be non-negative and less than the size of the collection.");
+
             var result = _items[index];
             _count--;
+            _version++;
+            if (index == _count)
+            {
+                _items[index] = default(T);
+                return result;
+            }
             _items[index] = _items[_count];
             _items[_count] = default(T);
-            _version++;
             return result;
         }
 
@@ -182,9 +190,14 @@ namespace MonoGame.Extended.Collections
             if (index < 0)
                 return false;
             _count--;
+            _version++;
+            if (index == _count)
+            {
+                _items[index] = default(T);
+                return true;
+            }
             _items[index] = _items[_count];
             _items[_count] = default(T);
-            _version++;
             return true;
         }
 
@@ -195,6 +208,13 @@ namespace MonoGame.Extended.Collections
         /// <returns>true if at least one element was removed; false if no elements were removed.</returns>
         public bool RemoveAll(Bag<T> bag)
         {
+            if (bag == this)
+            {
+                var countainAny = _count != 0;
+                Clear();
+                return countainAny;
+            }
+
             var isResult = false;
 
             foreach (var element in bag)
@@ -279,7 +299,7 @@ namespace MonoGame.Extended.Collections
         /// <returns>The zero-based index of the first occurrence of the element, or -1 if the element is not found.</returns>
         public int IndexOf(T item)
         {
-            return Array.IndexOf(_items, item, 0, _count - 1);
+            return Array.IndexOf(_items, item, 0, _count);
         }
 
         void IList<T>.Insert(int index, T item)
@@ -389,16 +409,16 @@ namespace MonoGame.Extended.Collections
             /// <inheritdoc/>
             public bool MoveNext()
             {
-                Bag<T> localList = _bag;
+                Bag<T> localBag = _bag;
 
                 if (_version != _bag._version)
                 {
                     throw new InvalidOperationException("Collection was modified; enumeration operation may not execute.");
                 }
                 
-                if ((uint)_index < (uint)localList._count)
+                if ((uint)_index < (uint)localBag._count)
                 {
-                    _current = localList._items[_index];
+                    _current = localBag._items[_index];
                     _index++;
                     return true;
                 }
