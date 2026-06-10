@@ -145,8 +145,25 @@ public class Sprite : IColorable
         Color = Color.White;
         IsVisible = true;
         Effect = SpriteEffects.None;
-        OriginNormalized = Vector2.Zero;
+        Origin = Vector2.Zero;
         Depth = 0.0f;
+    }
+
+    /// <summary>
+    /// Set the origin in the top left corner of the.
+    /// Equivalent to <see cref="Origin"/> = <see cref="Vector2.Zero"/>.
+    /// </summary>
+    public void SetOriginInTopLeft()
+    {
+        Origin = Vector2.Zero;
+    }
+
+    /// <summary>
+    /// Center the origin. Do not follow if the region is re sized.
+    /// </summary>
+    public void SetOriginCenter()
+    {
+        Origin = new Vector2(TextureRegion.Width, TextureRegion.Height) / 2;
     }
 
     /// <summary>
