@@ -40,9 +40,10 @@ public class Texture2DAtlas : IEnumerable<Texture2DRegion>
     private readonly Dictionary<string, Texture2DRegion> _regionsByName = new Dictionary<string, Texture2DRegion>();
 
     /// <summary>
-    /// Gets the name of the texture atlas.
+    /// Gets or sets the name of the texture atlas. Settable so a caller can assign a display name
+    /// after construction (e.g. from a sidecar config read after the atlas already exists).
     /// </summary>
-    public string Name { get; }
+    public string Name { get; set; }
 
     /// <summary>
     /// Gets the underlying 2D texture.
