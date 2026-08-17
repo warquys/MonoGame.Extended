@@ -286,7 +286,7 @@ namespace MonoGame.Extended
         ///     <c>true</c> if this <see cref="Segment2" /> is equal to the <paramref name="segment" /> parameter; otherwise,
         ///     <c>false</c>.
         /// </returns>
-        public bool Equals(ref Segment2 segment)
+        public bool Equals(ref readonly Segment2 segment)
         {
             return (Start == segment.Start) && (End == segment.End);
         }

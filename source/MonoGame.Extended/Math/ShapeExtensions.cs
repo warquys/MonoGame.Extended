@@ -103,7 +103,7 @@ namespace MonoGame.Extended
         /// <param name="layerDepth">The depth of the layer of this shape</param>
         public static void FillRectangle(this SpriteBatch spriteBatch, Vector2 location, SizeF size, Color color, float layerDepth = 0)
         {
-            spriteBatch.Draw(GetTexture(spriteBatch), location, null, color, 0, Vector2.Zero, size, SpriteEffects.None, layerDepth);
+            spriteBatch.Draw(GetTexture(spriteBatch), location, null, color, 0, Vector2.Zero, (Vector2)size, SpriteEffects.None, layerDepth);
         }
 
         /// <summary>

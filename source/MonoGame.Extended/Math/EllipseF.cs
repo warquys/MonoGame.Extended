@@ -59,7 +59,7 @@ namespace MonoGame.Extended
             return Equals(ref ellispse);
         }
 
-        public bool Equals(ref EllipseF ellispse)
+        public bool Equals(ref readonly EllipseF ellispse)
         {
             // ReSharper disable once CompareOfFloatsByEqualityOperator
             return ellispse.Center == Center

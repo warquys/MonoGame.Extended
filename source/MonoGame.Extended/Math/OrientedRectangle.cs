@@ -42,7 +42,7 @@ namespace MonoGame.Extended
         public OrientedRectangle(Vector2 center, SizeF radii, Matrix3x2 orientation)
         {
             Center = center;
-            Radii = radii;
+            Radii = (Vector2)radii;
             Orientation = orientation;
         }
 

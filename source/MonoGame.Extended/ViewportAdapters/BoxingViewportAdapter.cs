@@ -6,21 +6,44 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace MonoGame.Extended.ViewportAdapters
 {
+    /// <summary>
+    /// Specifies the type of boxing applied to a <see cref="BoxingViewportAdapter"/> to maintain aspect ratio.
+    /// </summary>
     public enum BoxingMode
     {
+        /// <summary>
+        /// No boxing is applied.
+        /// </summary>
         None,
+        /// <summary>
+        /// Letterboxing is applied (black bars top/bottom).
+        /// </summary>
         Letterbox,
+        /// <summary>
+        /// Pillarboxing is applied (black bars left/right).
+        /// </summary>
         Pillarbox
     }
 
+    /// <summary>
+    /// A viewport adapter that automatically applies letterboxing or pillarboxing to maintain
+    /// the virtual aspect ratio while utilizing the entire window area. Supports optional
+    /// bleed areas for safe scaling.
+    /// </summary>
     public class BoxingViewportAdapter : ScalingViewportAdapter
     {
         private readonly GameWindow _window;
         private readonly GraphicsDevice _graphicsDevice;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="BoxingViewportAdapter" />.
+        /// Initializes a new instance of the <see cref="BoxingViewportAdapter"/> class.
         /// </summary>
+        /// <param name="window">The game window providing client bounds.</param>
+        /// <param name="graphicsDevice">The graphics device used for rendering.</param>
+        /// <param name="virtualWidth">The fixed virtual width in pixels.</param>
+        /// <param name="virtualHeight">The fixed virtual height in pixels.</param>
+        /// <param name="horizontalBleed">The horizontal bleed area (from left and right edges) that can be safely cut off.</param>
+        /// <param name="verticalBleed">The vertical bleed area (from top and bottom edges) that can be safely cut off.</param>
         public BoxingViewportAdapter(GameWindow window, GraphicsDevice graphicsDevice, int virtualWidth, int virtualHeight, int horizontalBleed = 0, int verticalBleed = 0)
             : base(graphicsDevice, virtualWidth, virtualHeight)
         {
@@ -31,6 +54,7 @@ namespace MonoGame.Extended.ViewportAdapters
             VerticalBleed = verticalBleed;
         }
 
+        /// <inheritdoc/>
         public override void Dispose()
         {
             _window.ClientSizeChanged -= OnClientSizeChanged;
@@ -38,17 +62,25 @@ namespace MonoGame.Extended.ViewportAdapters
         }
 
         /// <summary>
-        ///     Size of horizontal bleed areas (from left and right edges) which can be safely cut off
+        /// Gets the size of horizontal bleed areas (from left and right edges) which can be safely cut off.
         /// </summary>
         public int HorizontalBleed { get; }
 
         /// <summary>
-        ///     Size of vertical bleed areas (from top and bottom edges) which can be safely cut off
+        /// Gets the size of vertical bleed areas (from top and bottom edges) which can be safely cut off.
         /// </summary>
         public int VerticalBleed { get; }
 
+        /// <summary>
+        /// Gets the current boxing mode being applied.
+        /// </summary>
         public BoxingMode BoxingMode { get; private set; }
 
+        /// <summary>
+        /// Handles window client size changes by recalculating scale and viewport.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="eventArgs">Event arguments (unused).</param>
         private void OnClientSizeChanged(object sender, EventArgs eventArgs)
         {
             var clientBounds = _window.ClientBounds;
@@ -72,7 +104,7 @@ namespace MonoGame.Extended.ViewportAdapters
             {
                 if (width >= clientBounds.Height && height <= clientBounds.Height)
                     BoxingMode = BoxingMode.Letterbox;
-               else
+                else
                     BoxingMode = BoxingMode.None;
             }
 
@@ -81,12 +113,14 @@ namespace MonoGame.Extended.ViewportAdapters
             GraphicsDevice.Viewport = new Viewport(x, y, width, height);
         }
 
+        /// <inheritdoc/>
         public override void Reset()
         {
             base.Reset();
             OnClientSizeChanged(this, EventArgs.Empty);
         }
 
+        /// <inheritdoc/>
         public override Point PointToScreen(int x, int y)
         {
             var viewport = GraphicsDevice.Viewport;

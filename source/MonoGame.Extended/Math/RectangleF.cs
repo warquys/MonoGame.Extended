@@ -97,7 +97,7 @@ namespace MonoGame.Extended
             }
         }
 
-        public RectangleF BoundingRectangle => this;
+        RectangleF IShapeF.BoundingRectangle => this;
 
         /// <summary>
         ///     Gets the <see cref="SizeF" /> representing the extents of this <see cref="RectangleF" />.
@@ -385,27 +385,13 @@ namespace MonoGame.Extended
             return result;
         }
 
-        [Obsolete("RectangleF.Intersect() may be removed in the future. Use Intersection() instead.")]
-        public static RectangleF Intersect(RectangleF value1, RectangleF value2)
-        {
-            RectangleF rectangle;
-            Intersection(ref value1, ref value2, out rectangle);
-            return rectangle;
-        }
-
-        [Obsolete("RectangleF.Intersect() may be removed in the future. Use Intersection() instead.")]
-        public static void Intersect(ref RectangleF value1, ref RectangleF value2, out RectangleF result)
-        {
-            Intersection(ref value1, ref value2, out result);
-        }
-
         /// <summary>
         ///     Determines whether the two specified <see cref="RectangleF" /> structures intersect.
         /// </summary>
         /// <param name="first">The first rectangle.</param>
         /// <param name="second">The second rectangle.</param>
         /// <returns>
-        ///     <c>true</c> if the <paramref name="first" /> intersects with the <see cref="second" />; otherwise, <c>false</c>.
+        ///     <c>true</c> if the <paramref name="first" /> intersects with the <paramref name="second"/>; otherwise, <c>false</c>.
         /// </returns>
         public static bool Intersects(ref RectangleF first, ref RectangleF second)
         {
@@ -419,7 +405,7 @@ namespace MonoGame.Extended
         /// <param name="first">The first rectangle.</param>
         /// <param name="second">The second rectangle.</param>
         /// <returns>
-        ///     <c>true</c> if the <paramref name="first" /> intersects with the <see cref="second" />; otherwise, <c>false</c>.
+        ///     <c>true</c> if the <paramref name="first" /> intersects with the <paramref name="second"/>; otherwise, <c>false</c>.
         /// </returns>
         public static bool Intersects(RectangleF first, RectangleF second)
         {
@@ -531,7 +517,14 @@ namespace MonoGame.Extended
             return result;
         }
 
-        //TODO: Document this.
+        /// <summary>
+        /// Inflates the rectangle by the specified horizontal and vertical amounts.
+        /// The X and Y coordinates are decreased by the corresponding amounts,
+        /// and the Width and Height are increased by twice those amounts,
+        /// effectively expanding the rectangle outward from its center.
+        /// </summary>
+        /// <param name="horizontalAmount">The amount to inflate the rectangle horizontally.</param>
+        /// <param name="verticalAmount">The amount to inflate the rectangle vertically.</param>
         public void Inflate(float horizontalAmount, float verticalAmount)
         {
             X -= horizontalAmount;
@@ -540,14 +533,21 @@ namespace MonoGame.Extended
             Height += verticalAmount * 2;
         }
 
-        //TODO: Document this.
+        /// <summary>
+        /// Moves the rectangle by the specified horizontal and vertical offsets.
+        /// </summary>
+        /// <param name="offsetX">The horizontal offset to apply to the rectangle's position.</param>
+        /// <param name="offsetY">The vertical offset to apply to the rectangle's position.</param>
         public void Offset(float offsetX, float offsetY)
         {
             X += offsetX;
             Y += offsetY;
         }
 
-        //TODO: Document this.
+        /// <summary>
+        /// Moves the rectangle by the specified vector amount.
+        /// </summary>
+        /// <param name="amount">The vector containing the horizontal and vertical offsets to apply.</param>
         public void Offset(Vector2 amount)
         {
             X += amount.X;
@@ -607,7 +607,7 @@ namespace MonoGame.Extended
         /// <returns>
         ///     <c>true</c> if this <see cref="RectangleF" /> is equal to the <paramref name="rectangle" />; otherwise, <c>false</c>.
         /// </returns>
-        public bool Equals(ref RectangleF rectangle)
+        public bool Equals(ref readonly RectangleF rectangle)
         {
             // ReSharper disable CompareOfFloatsByEqualityOperator
             return X == rectangle.X && Y == rectangle.Y && Width == rectangle.Width && Height == rectangle.Height;

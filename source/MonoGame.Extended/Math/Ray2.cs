@@ -130,7 +130,7 @@ namespace MonoGame.Extended
         ///     <c>true</c> if this <see cref="Ray2" /> is equal to the <paramref name="ray" />; otherwise,
         ///     <c>false</c>.
         /// </returns>
-        public bool Equals(ref Ray2 ray)
+        public bool Equals(ref readonly Ray2 ray)
         {
             // ReSharper disable CompareOfFloatsByEqualityOperator
             return (ray.Position == Position) && (ray.Direction == Direction);
